@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Controller, Get, Post, Body, Delete, Param } from '@nestjs/common';
 import { ParcelService } from './parcel.service';
 import { Parcel } from './parcel.schema';
@@ -10,7 +8,7 @@ export class ParcelController {
   constructor(private readonly ParcelService: ParcelService) {}
 
   @Get()
-  async findAll(): Promise<ResponseDto<Parcel[]>> {
+  async findAll() {
     const parcels = await this.ParcelService.findAll();
 
     return ResponseDto.ok({ data: parcels });
