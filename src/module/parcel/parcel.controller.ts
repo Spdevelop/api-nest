@@ -11,12 +11,21 @@ export class ParcelController {
   async findAll() {
     const parcels = await this.ParcelService.findAll();
 
-    return ResponseDto.ok({ data: parcels });
+    return ResponseDto.ok({
+      data: parcels,
+      meta: {
+        total: parcels.length,
+        limit: 0,
+        offset: 0,
+      },
+    });
   }
 
   @Post()
-  async create(@Body() data: Partial<Parcel>): Promise<Parcel> {
-    return this.ParcelService.create(data);
+  async create(@Body() data: Partial<Parcel>) {
+    const parcel = await this.ParcelService.create(data);
+
+    return ResponseDto.ok({ data: parcel });
   }
 
   @Delete(':id')

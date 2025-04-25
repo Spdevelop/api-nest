@@ -20,9 +20,23 @@ export class ParcelService {
     return listParcel;
   }
 
-  async create(data: Partial<Parcel>): Promise<Parcel> {
-    const newParcel = new this.parcelModel(data);
-    return newParcel.save();
+  async create(data: Partial<Parcel>) {
+    try {
+      const newParcel = new this.parcelModel(data);
+      const savedParcel = await newParcel.save();
+
+      if (!savedParcel) {
+        throw ErrorException.BAD_REQUEST_WITH({
+          message: 'Failed to create parcel',
+        });
+      }
+
+      return savedParcel;
+    } catch (error) {
+      throw ErrorException.BAD_REQUEST_WITH({
+        message: error.message || 'Failed to create parcel',
+      });
+    }
   }
 
   async delete(id: string): Promise<Parcel> {
