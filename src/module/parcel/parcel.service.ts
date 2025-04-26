@@ -4,7 +4,8 @@ import { Model } from 'mongoose';
 import { Parcel, ParcelDocument } from './parcel.schema';
 import { NotFoundException } from '@nestjs/common';
 import { ErrorException } from 'core/exceptions';
-
+import { isValidObjectId } from 'mongoose';
+import { validateMongoId } from 'utils/mongo';
 @Injectable()
 export class ParcelService {
   constructor(
@@ -18,6 +19,13 @@ export class ParcelService {
       throw ErrorException.BAD_REQUEST_WITH({ message: 'Parcel not found' });
     }
     return listParcel;
+  }
+  async findById(id: string) {
+    validateMongoId(id);
+    const parcel = await this.parcelModel.findById(id);
+    if (!parcel) throw ErrorException.NOT_FOUND();
+
+    return parcel;
   }
 
   async create(data: Partial<Parcel>) {

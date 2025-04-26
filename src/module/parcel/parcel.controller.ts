@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Delete, Param } from '@nestjs/common';
 import { ParcelService } from './parcel.service';
 import { Parcel } from './parcel.schema';
-import { ResponseDto } from '../../core/dto';
+import { ResponseDto, IdParam } from '../../core/dto';
 
 @Controller('parcel')
 export class ParcelController {
@@ -21,6 +21,15 @@ export class ParcelController {
     });
   }
 
+  @Get(':id')
+  async findById(@Param() { id }: IdParam) {
+    const parcel = await this.ParcelService.findById(id);
+
+    return ResponseDto.ok({
+      data: parcel,
+    });
+  }
+
   @Post()
   async create(@Body() data: Partial<Parcel>) {
     const parcel = await this.ParcelService.create(data);
@@ -29,7 +38,10 @@ export class ParcelController {
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<Parcel> {
-    return this.ParcelService.delete(id);
+  async delete(@Param('id') id: string) {
+    await this.ParcelService.delete(id);
+    return ResponseDto.ok({
+      message: 'delete success',
+    });
   }
 }

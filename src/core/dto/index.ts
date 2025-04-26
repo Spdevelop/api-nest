@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { IsMongoId } from 'class-validator';
 
 export class Meta {
   limit: number;
@@ -8,6 +9,10 @@ export class Meta {
   total: number;
 }
 
+export class IdParam {
+  @IsMongoId({ message: 'Invalid ID format' })
+  id: string;
+}
 export class ApiResponse<T = unknown> {
   code: string;
   success: boolean;
