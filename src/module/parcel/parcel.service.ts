@@ -20,6 +20,34 @@ export class ParcelService {
     }
     return listParcel;
   }
+  async findAllByGroup() {
+    const listParcel = await this.parcelModel.find();
+
+    if (!listParcel) {
+      throw ErrorException.BAD_REQUEST_WITH({ message: 'Parcel not found' });
+    }
+
+    const grouped = listParcel.reduce((acc, parcel) => {
+      const address = parcel.addressFullParcel || 'unknown';
+      if (!acc[address]) {
+        acc[address] = [];
+      }
+      acc[address].push(parcel);
+      return acc;
+    }, {});
+
+    const result = Object.keys(grouped).map((address) => ({
+      addressFullParcel: address,
+      parcels: grouped[address].length,
+      dateParcel: grouped[address][grouped[address].length - 1].dateTime,
+      typeParcel: grouped[address][grouped[address].length - 1].typeParcel,
+      nameParcel: grouped[address][grouped[address].length - 1].nameParcel,
+      companyParcel:
+        grouped[address][grouped[address].length - 1].companyParcel,
+    }));
+
+    return result;
+  }
   async findById(id: string) {
     validateMongoId(id);
     const parcel = await this.parcelModel.findById(id);
@@ -31,6 +59,7 @@ export class ParcelService {
   async create(data: Partial<Parcel>) {
     try {
       const newParcel = new this.parcelModel(data);
+      newParcel.dateTime = new Date().toISOString();
       const savedParcel = await newParcel.save();
 
       if (!savedParcel) {

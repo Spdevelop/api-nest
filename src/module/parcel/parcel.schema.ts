@@ -25,6 +25,9 @@ export class Parcel {
 
   @Prop()
   status: string;
+
+  @Prop()
+  dateTime: string;
 }
 
 export const ParcelSchema = SchemaFactory.createForClass(Parcel);

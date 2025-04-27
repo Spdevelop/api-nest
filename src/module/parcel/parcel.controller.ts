@@ -21,6 +21,20 @@ export class ParcelController {
     });
   }
 
+  @Get('/list-group')
+  async findAllByGroup() {
+    const parcels = await this.ParcelService.findAllByGroup();
+
+    return ResponseDto.ok({
+      data: parcels,
+      meta: {
+        total: parcels.length,
+        limit: 0,
+        offset: 0,
+      },
+    });
+  }
+
   @Get(':id')
   async findById(@Param() { id }: IdParam) {
     const parcel = await this.ParcelService.findById(id);
