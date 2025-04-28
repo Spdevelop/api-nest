@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Delete, Param } from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 import { Employee } from './employee.schema';
 import { ResponseDto } from '../../core/dto';
-import { validateMongoId } from 'utils/mongo';
+import { validateMongoId } from '../../utils/mongo';
 
 @Controller('employees')
 export class EmployeesController {

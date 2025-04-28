@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { Parcel, ParcelDocument } from './parcel.schema';
 import { NotFoundException } from '@nestjs/common';
 import { ErrorException } from '../../core/exceptions';
-import { validateMongoId } from 'utils/mongo';
+import { validateMongoId } from '../../utils/mongo';
 @Injectable()
 export class ParcelService {
   constructor(
