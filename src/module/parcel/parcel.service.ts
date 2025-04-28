@@ -54,6 +54,14 @@ export class ParcelService {
 
     return parcel;
   }
+  async fetchByAddress(address: string) {
+    const parcel = await this.parcelModel.find({
+      addressFullParcel: { $regex: `${address}`, $options: 'i' },
+    });
+    if (!parcel) throw ErrorException.NOT_FOUND();
+
+    return parcel;
+  }
 
   async create(data: Partial<Parcel>) {
     try {

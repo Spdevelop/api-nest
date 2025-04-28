@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Delete, Param } from '@nestjs/common';
 import { ParcelService } from './parcel.service';
 import { Parcel } from './parcel.schema';
 import { ResponseDto, IdParam } from '../../core/dto';
+import { ErrorException } from 'core/exceptions';
 
 @Controller('parcel')
 export class ParcelController {
@@ -44,6 +45,21 @@ export class ParcelController {
     });
   }
 
+  @Post('/detail')
+  async fetchByAddress(@Body() data: Partial<Parcel>) {
+    if (!data.addressFullParcel) {
+      throw ErrorException.BAD_REQUEST_WITH({
+        message: 'addressFullParcel is required',
+      });
+    }
+    const parcel = await this.ParcelService.fetchByAddress(
+      data.addressFullParcel,
+    );
+
+    return ResponseDto.ok({
+      data: parcel,
+    });
+  }
   @Post()
   async create(@Body() data: Partial<Parcel>) {
     const parcel = await this.ParcelService.create(data);
