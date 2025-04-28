@@ -4,7 +4,6 @@ import { Model } from 'mongoose';
 import { Parcel, ParcelDocument } from './parcel.schema';
 import { NotFoundException } from '@nestjs/common';
 import { ErrorException } from 'core/exceptions';
-import { isValidObjectId } from 'mongoose';
 import { validateMongoId } from 'utils/mongo';
 @Injectable()
 export class ParcelService {
@@ -38,7 +37,7 @@ export class ParcelService {
 
     const result = Object.keys(grouped).map((address) => ({
       addressFullParcel: address,
-      parcels: grouped[address].length,
+      parcels: grouped[address].length === 0 ? 1 : grouped[address].length,
       dateParcel: grouped[address][grouped[address].length - 1].dateTime,
       typeParcel: grouped[address][grouped[address].length - 1].typeParcel,
       nameParcel: grouped[address][grouped[address].length - 1].nameParcel,
