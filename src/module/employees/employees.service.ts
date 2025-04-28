@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Employee, EmployeeDocument } from './employee.schema';
 import { NotFoundException } from '@nestjs/common';
-import { ErrorException } from 'core/exceptions';
+import { ErrorException } from '../../core/exceptions';
 import { isValidObjectId } from 'mongoose';
 
 @Injectable()
