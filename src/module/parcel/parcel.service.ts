@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Parcel, ParcelDocument } from './parcel.schema';
 import { NotFoundException } from '@nestjs/common';
-import { ErrorException } from 'core/exceptions';
+import { ErrorException } from '../../core/exceptions';
 import { validateMongoId } from 'utils/mongo';
 @Injectable()
 export class ParcelService {
@@ -67,6 +67,7 @@ export class ParcelService {
     try {
       const newParcel = new this.parcelModel(data);
       newParcel.dateTime = new Date().toISOString();
+      newParcel.status = 'pending';
       const savedParcel = await newParcel.save();
 
       if (!savedParcel) {

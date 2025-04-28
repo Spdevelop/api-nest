@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Delete, Param } from '@nestjs/common';
 import { ParcelService } from './parcel.service';
 import { Parcel } from './parcel.schema';
 import { ResponseDto, IdParam } from '../../core/dto';
-import { ErrorException } from 'core/exceptions';
+import { ErrorException } from '../../core/exceptions';
 
 @Controller('parcel')
 export class ParcelController {
