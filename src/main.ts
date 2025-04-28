@@ -1,9 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SpdevLogger } from './core/logger';
-import express from 'express';
-
-const server = express();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,5 +11,3 @@ async function bootstrap() {
   );
 }
 bootstrap();
-
-export default server;
