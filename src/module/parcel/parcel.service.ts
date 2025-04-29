@@ -20,7 +20,7 @@ export class ParcelService {
     return listParcel;
   }
   async findAllByGroup() {
-    const listParcel = await this.parcelModel.find();
+    const listParcel = await this.parcelModel.find({ status: 'pending' });
 
     if (!listParcel) {
       throw ErrorException.BAD_REQUEST_WITH({ message: 'Parcel not found' });
@@ -56,7 +56,11 @@ export class ParcelService {
   }
   async fetchByAddress(address: string) {
     const parcel = await this.parcelModel.find({
-      addressFullParcel: { $regex: `${address}`, $options: 'i' },
+      addressFullParcel: {
+        $regex: address,
+        $options: 'i',
+      },
+      status: 'pending',
     });
     if (!parcel) throw ErrorException.NOT_FOUND();
 
@@ -90,5 +94,28 @@ export class ParcelService {
       throw new NotFoundException(`Parcel with id ${id} not found`);
     }
     return deleted;
+  }
+
+  async updateParcelSignature(
+    idParcels: string[],
+    signatureBase64: string,
+  ): Promise<any> {
+    const result = await this.parcelModel.updateMany(
+      { _id: { $in: idParcels } },
+      {
+        $set: {
+          signatureBase64,
+          status: 'success',
+        },
+      },
+    );
+
+    if (result.modifiedCount === 0) {
+      throw new NotFoundException(`No parcels found with the provided IDs`);
+    }
+
+    return {
+      message: `${result.modifiedCount} parcels updated successfully`,
+    };
   }
 }

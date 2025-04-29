@@ -3,6 +3,7 @@ import { ParcelService } from './parcel.service';
 import { Parcel } from './parcel.schema';
 import { ResponseDto, IdParam } from '../../core/dto';
 import { ErrorException } from '../../core/exceptions';
+import { UpdateParcelSignatureDto } from './dto/update-parcel-signature.dto';
 
 @Controller('parcel')
 export class ParcelController {
@@ -60,6 +61,18 @@ export class ParcelController {
       data: parcel,
     });
   }
+  @Post('/signature')
+  async updateParcelSignature(@Body() data: UpdateParcelSignatureDto) {
+    const parcel = await this.ParcelService.updateParcelSignature(
+      data.idParcels,
+      data.signatureBase64,
+    );
+
+    return ResponseDto.ok({
+      data: parcel,
+    });
+  }
+
   @Post()
   async create(@Body() data: Partial<Parcel>) {
     const parcel = await this.ParcelService.create(data);
