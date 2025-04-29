@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Delete, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Delete,
+  Param,
+  Patch,
+} from '@nestjs/common';
 import { ParcelService } from './parcel.service';
 import { Parcel } from './parcel.schema';
 import { ResponseDto, IdParam } from '../../core/dto';
@@ -61,7 +69,7 @@ export class ParcelController {
       data: parcel,
     });
   }
-  @Post('/signature')
+  @Patch('/signature')
   async updateParcelSignature(@Body() data: UpdateParcelSignatureDto) {
     const parcel = await this.ParcelService.updateParcelSignature(
       data.idParcels,

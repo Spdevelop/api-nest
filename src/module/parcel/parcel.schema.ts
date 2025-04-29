@@ -28,6 +28,9 @@ export class Parcel {
 
   @Prop()
   dateTime: string;
+
+  @Prop()
+  signatureBase64: string;
 }
 
 export const ParcelSchema = SchemaFactory.createForClass(Parcel);

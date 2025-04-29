@@ -72,6 +72,7 @@ export class ParcelService {
       const newParcel = new this.parcelModel(data);
       newParcel.dateTime = new Date().toISOString();
       newParcel.status = 'pending';
+      newParcel.signatureBase64 = '';
       const savedParcel = await newParcel.save();
 
       if (!savedParcel) {
