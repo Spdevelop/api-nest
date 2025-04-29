@@ -69,7 +69,7 @@ export class ParcelController {
       data: parcel,
     });
   }
-  @Patch('/signature')
+  @Post('/signature')
   async updateParcelSignature(@Body() data: UpdateParcelSignatureDto) {
     const parcel = await this.ParcelService.updateParcelSignature(
       data.idParcels,
