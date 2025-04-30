@@ -20,30 +20,32 @@ export class ParcelService {
     return listParcel;
   }
   async findAllByGroup() {
-    const listParcel = await this.parcelModel.find({ status: 'pending' });
+    const result = await this.parcelModel.aggregate([
+      { $match: { status: 'pending' } },
+      {
+        $group: {
+          _id: { $ifNull: ['$addressFullParcel', 'unknown'] },
+          parcels: { $push: '$$ROOT' },
+          count: { $sum: 1 },
+          lastParcel: { $last: '$$ROOT' },
+        },
+      },
+      {
+        $project: {
+          addressFullParcel: '$_id',
+          parcels: '$count',
+          dateParcel: '$lastParcel.dateTime',
+          typeParcel: '$lastParcel.typeParcel',
+          nameParcel: '$lastParcel.nameParcel',
+          companyParcel: '$lastParcel.companyParcel',
+          _id: 0,
+        },
+      },
+    ]);
 
-    if (!listParcel) {
+    if (!result || result.length === 0) {
       throw ErrorException.BAD_REQUEST_WITH({ message: 'Parcel not found' });
     }
-
-    const grouped = listParcel.reduce((acc, parcel) => {
-      const address = parcel.addressFullParcel || 'unknown';
-      if (!acc[address]) {
-        acc[address] = [];
-      }
-      acc[address].push(parcel);
-      return acc;
-    }, {});
-
-    const result = Object.keys(grouped).map((address) => ({
-      addressFullParcel: address,
-      parcels: grouped[address].length === 0 ? 1 : grouped[address].length,
-      dateParcel: grouped[address][grouped[address].length - 1].dateTime,
-      typeParcel: grouped[address][grouped[address].length - 1].typeParcel,
-      nameParcel: grouped[address][grouped[address].length - 1].nameParcel,
-      companyParcel:
-        grouped[address][grouped[address].length - 1].companyParcel,
-    }));
 
     return result;
   }
