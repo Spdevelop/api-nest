@@ -5,7 +5,10 @@ import { SpdevLogger } from './core/logger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.enableCors();
+  app.enableCors({
+    origin: `${process.env.CORS_URI}`,
+    credentials: true,
+  });
 
   await app.listen(process.env.PORT ?? 3000);
   new SpdevLogger().log(
